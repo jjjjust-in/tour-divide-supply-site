@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tour Divide Supply</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/png" href="favicon.png" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="scene">
+    <div class="notebook-wrap">
+      <img class="page page-3" src="Layer_1 Large.png" alt="" />
+      <img class="page page-2" src="Layer_1-1 Large.png" alt="" />
+      <img class="page page-1" src="Layer_1-2 Large.png" alt="" />
+      <img class="notebook" src="notebook Large.png" alt="Ride Journal Notebook" />
+    </div>
+    <div class="phone-wrap">
+      <img class="phone app" src="iphone-2.png" alt="Tour Divide Supply App" />
+      <img class="phone splash" src="iphone.png" alt="Tour Divide Supply" />
+    </div>
+  </div>
+
+  <img class="bottom-lockup" src="Logo Lockup.svg" alt="tourdividesupply.com" id="logo-lockup" />
+
+  <!-- About modal -->
+  <div class="modal-overlay" id="modal">
+    <div class="modal">
+      <div class="modal-body">
+        <button class="modal-close" id="modal-close">&times;</button>
+        <p>TourDivideSupply.com was created by <a class="highlight" href="https://jjjjust.in" target="_blank">JJJJustin</a>, an avid bikepacker and product designer who has ridden over 5,000 miles on the Tour Divide route. This is a preview of two tools built for riders planning or remembering their time on the Divide.</p>
+        <p>The <span class="highlight">Ride Journal</span> is a waterproof, pocket-sized notebook, the same size as a passport, a nod to a route that crosses borders. It's made to disappear into a jersey pocket or handlebar bag, ready for sketching maps, tracking daily miles, noting resupply conditions, or capturing what it felt like in the moment.</p>
+        <p>The <span class="highlight">app</span> is a digital companion, a place to organize notes, track towns along the 2,745 mile route from Banff to Antelope Wells, and store addresses, hours, and phone numbers so resupplies stay quick and efficient, while still holding onto the parts of the ride that never show up on Strava.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const isTouch = () => window.matchMedia('(hover: none)').matches;
+
+    // Notebook: hover on desktop, tap-to-shuffle on touch
+    const notebookWrap = document.querySelector('.notebook-wrap');
+    const pages = Array.from(notebookWrap.querySelectorAll('.page'));
+    // Shuffle order: front page first, then middle, then back
+    const shuffleOrder = [pages[2], pages[1], pages[0]];
+    let shuffleIndex = -1; // -1 = notebook cover on top
+
+    notebookWrap.addEventListener('click', () => {
+      if (!isTouch()) return;
+      // Remove top class from current
+      shuffleOrder.forEach(p => p.classList.remove('page-top'));
+      // Advance index, wrapping back to notebook cover
+      shuffleIndex = (shuffleIndex + 1) % (shuffleOrder.length + 1);
+      if (shuffleIndex < shuffleOrder.length) {
+        shuffleOrder[shuffleIndex].classList.add('page-top');
+      }
+      // When wrapped back to -1 equivalent (index === shuffleOrder.length), notebook is naturally on top
+    });
+
+    // Phone: click-to-open + mouseleave-to-reset on desktop; tap-to-toggle on touch
+    const phoneWrap = document.querySelector('.phone-wrap');
+
+    phoneWrap.addEventListener('click', () => {
+      if (isTouch()) {
+        phoneWrap.classList.toggle('active');
+      } else {
+        phoneWrap.classList.add('active');
+      }
+    });
+
+    phoneWrap.addEventListener('mouseleave', () => {
+      if (isTouch()) return;
+      if (!phoneWrap.classList.contains('active')) return;
+      phoneWrap.classList.add('returning');
+      phoneWrap.classList.remove('active');
+      setTimeout(() => phoneWrap.classList.remove('returning'), 300);
+    });
+
+    const logo = document.getElementById('logo-lockup');
+    const modal = document.getElementById('modal');
+    const modalClose = document.getElementById('modal-close');
+
+    logo.addEventListener('click', () => modal.classList.add('open'));
+    modalClose.addEventListener('click', () => modal.classList.remove('open'));
+    modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('open'); });
+  </script>
+</body>
+</html>
